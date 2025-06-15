@@ -38,6 +38,7 @@ def generate_launch_description():
     gz_verbosity = LaunchConfiguration("gz_verbosity")
     run_headless = LaunchConfiguration("run_headless")
     world_file_name = LaunchConfiguration("world_file")
+    brush_controllers_config_path = PathJoinSubstitution([pkg_share, "config", "brush_controllers.yaml"])
     gz_models_path = ":".join([pkg_share, os.path.join(pkg_share, "models")])
     #gz_models_path = os.path.join(pkg_share, "models")
     world_path = PathJoinSubstitution([pkg_share, "world", world_file_name])
@@ -117,7 +118,9 @@ def generate_launch_description():
             "--log-level",
             log_level,
         ],
-        parameters=[{"use_sim_time": use_sim_time}],
+        parameters=[
+    {"use_sim_time": use_sim_time},
+],
     )
 
     bridge = Node(
@@ -135,6 +138,15 @@ def generate_launch_description():
         output="screen",
     )
 
+    controller_manager_node = Node(
+        package='controller_manager',
+        executable='ros2_control_node',
+        parameters=[brush_controllers_config_path], # Pass your controller config here
+        output='screen',
+        emulate_tty=True, # Recommended for better output in a terminal
+        arguments=['--ros-args', '--log-level', log_level],
+    )
+    
     load_joint_state_controller = ExecuteProcess(
         name="activate_joint_state_broadcaster",
         cmd=[
@@ -148,7 +160,17 @@ def generate_launch_description():
         shell=False,
         output="screen",
     )
+     
+    load_soft_brush_controller = ExecuteProcess(
+    cmd=["ros2", "control", "load_controller", "--set-state", "active", "soft_brush_controller"],
+    output="screen"
+    )
 
+    load_hard_brush_controller = ExecuteProcess(
+    cmd=["ros2", "control", "load_controller", "--set-state", "active", "hard_brush_controller"],
+    output="screen"
+    )
+    
     load_joint_trajectory_controller = ExecuteProcess(
         name="activate_diff_drive_base_controller",
         cmd=[
@@ -261,6 +283,16 @@ def generate_launch_description():
                     on_exit=[load_joint_trajectory_controller],
                 )
             ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=load_joint_trajectory_controller, # Wait for the main diff drive to load
+                    on_exit=[
+                        load_soft_brush_controller,
+                        load_hard_brush_controller,
+                    ],
+                )
+            ),
+            
             relay_odom,
             relay_cmd_vel,
         ] + gazebo

@@ -1,0 +1,26 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+      ros__parameters:
+        # No specific parameters typically needed here, but keeping ros__parameters for consistency
+        # publish_rate: 50.0
+
+    soft_brush_controller:
+      type: velocity_controllers/JointVelocityController
+      ros__parameters:
+        joint: soft_brush_joint
+        # You can add more parameters here if your controller needs them, e.g.:
+        # command_interface: velocity
+        # state_interface: velocity
+        # pid:
+        #   p: 1.0
+        #   i: 0.1
+        #   d: 0.0
+
+    hard_brush_controller:
+      type: velocity_controllers/JointVelocityController
+      ros__parameters:
+        joint: hard_brush_joint
