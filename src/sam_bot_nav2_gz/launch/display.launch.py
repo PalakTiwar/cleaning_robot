@@ -47,7 +47,8 @@ def generate_launch_description():
         package="robot_state_publisher",
         executable="robot_state_publisher",
         parameters=[
-            {"robot_description": Command(["xacro ", LaunchConfiguration("model")])}
+            {"robot_description": Command(["xacro ", LaunchConfiguration("model")]),
+             'use_sim_time': use_sim_time},
         ],
     )
 
@@ -58,6 +59,7 @@ def generate_launch_description():
         name="rviz2",
         output="screen",
         arguments=["-d", LaunchConfiguration("rvizconfig")],
+        parameters=[{'use_sim_time': use_sim_time}],
     )
 
     # Localize using odometry and IMU data. 
@@ -111,9 +113,13 @@ def generate_launch_description():
             "-topic",
             "robot_description",
             "-z",
-            "1.0",
+            "1.0", #leave it as it is
             "-x",
-            "-2.0",
+            "-3.0",# x here
+            "-y",
+	    "4.5",# y here
+	    "-Y",   # <--- ADDED: Yaw argument (rotation around Z-axis)
+            "0.0",
             "--ros-args",
             "--log-level",
             log_level,
@@ -141,7 +147,15 @@ def generate_launch_description():
     controller_manager_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
-        parameters=[brush_controllers_config_path], # Pass your controller config here
+        parameters=[
+    PathJoinSubstitution([
+        FindPackageShare("sam_bot_nav2_gz"),
+        "config",
+        "brush_controllers.yaml"
+    ]),
+    {'use_sim_time': use_sim_time}
+],
+ # Pass your controller config here
         output='screen',
         emulate_tty=True, # Recommended for better output in a terminal
         arguments=['--ros-args', '--log-level', log_level],
@@ -268,6 +282,7 @@ def generate_launch_description():
             ),
             bridge,
             robot_state_publisher_node,
+            controller_manager_node,
             spawn_entity,
             robot_localization_node,
             rviz_node,

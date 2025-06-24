@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 2
+names: ['bathtub', 'dining']
+
+roboflow:
+  workspace: cleanbot-kxqcq
+  project: custom_objects-66n6a
+  version: 1
+  license: MIT
+  url: https://universe.roboflow.com/cleanbot-kxqcq/custom_objects-66n6a/dataset/1

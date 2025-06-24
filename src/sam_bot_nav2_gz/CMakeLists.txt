@@ -20,21 +20,32 @@ find_package(ament_cmake REQUIRED)
 find_package(xacro REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclpy REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+# Add required packages here:
+find_package(control_msgs REQUIRED) # Added: For control messages
+find_package(ros_ign_gazebo REQUIRED) # Added: For Ignition Gazebo ROS 2 integration
+find_package(rosidl_default_generators REQUIRED) # Re-added: Needed for custom message generation
 
+
+# Generate custom message interfaces
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/Detection.msg"
+  "msg/DetectedObjects.msg"
+)
+
+# Install directories
+# Removed 'scripts' from here as Python executables are handled by setup.py's entry_points
 install(
-  DIRECTORY src scripts launch rviz config world models
+  DIRECTORY src launch rviz config world models
   DESTINATION share/${PROJECT_NAME}
 )
 
-# Install Python executables
-install(PROGRAMS
-  scripts/reach_goal.py
-  scripts/follow_waypoints.py
-  DESTINATION lib/${PROJECT_NAME}
-)
+# Removed this block, as Python executables defined in setup.py's console_scripts
+# are automatically handled by ament_cmake_python during the build process.
+# install(PROGRAMS
+#   scripts/reach_goal.py
+#   scripts/follow_waypoints.py
+#   DESTINATION lib/${PROJECT_NAME}
+# )
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -47,4 +58,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+# Export dependencies to allow other packages to find your custom messages at runtime
+ament_export_dependencies(rosidl_default_runtime)
+#ament_python_install_package(sam_bot_nav2_gz_py)
 ament_package()

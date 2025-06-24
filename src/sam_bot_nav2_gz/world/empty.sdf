@@ -23,7 +23,7 @@
 
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
-      <pose>-4 0 10 0 0 0</pose>
+      <pose>0 0 10 0 0 0</pose>
       <diffuse>0.8 0.8 0.8 1</diffuse>
       <specular>0.2 0.2 0.2 1</specular>
       <attenuation>
@@ -117,10 +117,10 @@
 
 <include>
       <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Bed</uri>
-      <pose>4 -4.2 0.4 0 0 3.14159</pose> </include>
+      <pose>4 -4.2 0.05 0 0 3.14159</pose> </include>
     <include>
       <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/MetalCabinet</uri>
-      <pose>5.5 -5.2 0.4 0 0 3.14159</pose> </include>
+      <pose>5.5 -5.2 0.05 0 0 3.14159</pose> </include>
 
 
   
@@ -149,7 +149,7 @@
     
    <include>
       <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/KitchenSink</uri>
-      <pose>6 6 0.4 0 0 -1.5708</pose> </include>
+      <pose>6.8 6 0.4 0 0 -1.5708</pose> </include>
     <include>
       <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Dining Table</uri>
       <pose>4.5 5.1 0.1 0 0 0</pose> </include>
@@ -197,7 +197,7 @@
       <pose>0.4 3 0.7 0 0 -1.5708</pose> </include>
     <include>
       <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Bathtub</uri>
-      <pose>-3.6 2.5 0.4 0 0 0</pose> </include>
+      <pose>-3.6 2.5 0.1 0 0 0</pose> </include>
 
     <!-- Living Room -->
     <model name="living_room">
@@ -498,10 +498,11 @@
       <geometry><box><size>0.1 5 2.5</size></box></geometry>
            
 <material>
-        <ambient>0.8 0.8 0.8 1</ambient>
-        <diffuse>0.8 0.8 0.8 1</diffuse>
-        <specular>0.1 0.1 0.1 1</specular>
-      </material>
+  <ambient>0.6 0.8 1.0 1</ambient>
+  <diffuse>0.6 0.8 1.0 1</diffuse>
+  <specular>0.1 0.1 0.1 1</specular>
+</material>
+
 
     
     </visual>
