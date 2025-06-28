@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Cleaning Control</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#e0f7fa] to-[#e3f2fd] flex items-center justify-center p-6">
+  <div class="w-full max-w-4xl bg-white shadow-xl rounded-xl p-10">
+    <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8">Choose a Room to Clean</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <a href="/start-cleaning?room=Living Room" class="block bg-[#cce3dc] hover:bg-[#b2d8ce] transition p-6 rounded-xl shadow-md text-center">
+        <h2 class="text-2xl font-semibold text-gray-800">🛋️ Living Room</h2>
+        <p class="text-gray-600 mt-2">Start cleaning the living area</p>
+      </a>
+
+      <a href="/start-cleaning?room=Bedroom" class="block bg-[#dbcdf0] hover:bg-[#c7b6e4] transition p-6 rounded-xl shadow-md text-center">
+        <h2 class="text-2xl font-semibold text-gray-800">🛏️ Bedroom</h2>
+        <p class="text-gray-600 mt-2">Freshen up your sleeping space</p>
+      </a>
+
+      <a href="/start-cleaning?room=Kitchen" class="block bg-[#fce1e4] hover:bg-[#f8cfd4] transition p-6 rounded-xl shadow-md text-center">
+        <h2 class="text-2xl font-semibold text-gray-800">🍽️ Kitchen</h2>
+        <p class="text-gray-600 mt-2">Wipe down counters and floors</p>
+      </a>
+
+      <a href="/start-cleaning?room=Bathroom" class="block bg-[#fff3b0] hover:bg-[#ffeb80] transition p-6 rounded-xl shadow-md text-center">
+        <h2 class="text-2xl font-semibold text-gray-800">🚿 Bathroom</h2>
+        <p class="text-gray-600 mt-2">Disinfect and tidy up the space</p>
+      </a>
+
+    </div>
+  </div>
+</body>
+</html>

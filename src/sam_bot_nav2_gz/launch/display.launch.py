@@ -38,7 +38,11 @@ def generate_launch_description():
     gz_verbosity = LaunchConfiguration("gz_verbosity")
     run_headless = LaunchConfiguration("run_headless")
     world_file_name = LaunchConfiguration("world_file")
-    brush_controllers_config_path = PathJoinSubstitution([pkg_share, "config", "brush_controllers.yaml"])
+    robot_controllers_config = PathJoinSubstitution([
+        FindPackageShare("sam_bot_nav2_gz"), # <-- THIS IS WHERE YOUR PACKAGE NAME COMES IN
+        "config",
+        "robot_controllers.yaml"
+    ])
     gz_models_path = ":".join([pkg_share, os.path.join(pkg_share, "models")])
     #gz_models_path = os.path.join(pkg_share, "models")
     world_path = PathJoinSubstitution([pkg_share, "world", world_file_name])
@@ -50,6 +54,17 @@ def generate_launch_description():
             {"robot_description": Command(["xacro ", LaunchConfiguration("model")]),
              'use_sim_time': use_sim_time},
         ],
+    )
+    
+     # Controller Manager Node
+    # This node loads the robot_controllers.yaml and makes controllers available
+    controller_manager_node = Node(
+        package='controller_manager',
+        executable='ros2_control_node',
+        parameters=[robot_controllers_config, {'use_sim_time': use_sim_time}],
+        output='screen',
+        emulate_tty=True, # Recommended for better output in a terminal
+        arguments=['--ros-args', '--log-level', log_level],
     )
 
     rviz_node = Node(
@@ -144,7 +159,7 @@ def generate_launch_description():
         output="screen",
     )
 
-    controller_manager_node = Node(
+    '''controller_manager_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
         parameters=[
@@ -159,9 +174,9 @@ def generate_launch_description():
         output='screen',
         emulate_tty=True, # Recommended for better output in a terminal
         arguments=['--ros-args', '--log-level', log_level],
-    )
+    )'''
     
-    load_joint_state_controller = ExecuteProcess(
+    load_joint_state_broadcaster = ExecuteProcess(
         name="activate_joint_state_broadcaster",
         cmd=[
             "ros2",
@@ -185,7 +200,7 @@ def generate_launch_description():
     output="screen"
     )
     
-    load_joint_trajectory_controller = ExecuteProcess(
+    load_diff_drive_base_controller = ExecuteProcess(
         name="activate_diff_drive_base_controller",
         cmd=[
             "ros2",
@@ -289,25 +304,23 @@ def generate_launch_description():
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=spawn_entity,
-                    on_exit=[load_joint_state_controller],
+                    on_exit=[load_joint_state_broadcaster],
                 )
             ),
             RegisterEventHandler(
                 event_handler=OnProcessExit(
-                    target_action=load_joint_state_controller,
-                    on_exit=[load_joint_trajectory_controller],
+                    target_action=load_joint_state_broadcaster,
+                    on_exit=[load_diff_drive_base_controller],
                 )
             ),
             RegisterEventHandler(
-                event_handler=OnProcessExit(
-                    target_action=load_joint_trajectory_controller, # Wait for the main diff drive to load
-                    on_exit=[
-                        load_soft_brush_controller,
-                        load_hard_brush_controller,
-                    ],
-                )
-            ),
-            
+            event_handler=OnProcessExit(
+                target_action=load_diff_drive_base_controller,
+                on_exit=[
+                    load_soft_brush_controller,
+                    load_hard_brush_controller]
+               )
+           ),          
             relay_odom,
             relay_cmd_vel,
         ] + gazebo

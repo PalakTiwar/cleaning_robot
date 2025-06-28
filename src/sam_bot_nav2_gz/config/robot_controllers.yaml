@@ -1,0 +1,62 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100 # Hz
+
+    # Joint State Broadcaster: Publishes current joint states
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    # Soft Brush Controller: Controls the velocity of soft_brush_joint
+    soft_brush_controller:
+      type: velocity_controllers/JointGroupVelocityController
+      joints:
+        - soft_brush_joint
+
+    # Hard Brush Controller: Controls the velocity of hard_brush_joint
+    hard_brush_controller:
+      type: velocity_controllers/JointGroupVelocityController
+      joints:
+        - hard_brush_joint
+
+    # Differential Drive Controller: Controls the robot's base movement
+    # ALL PARAMETERS FOR diff_drive_base_controller ARE NOW NESTED HERE
+    diff_drive_base_controller:
+      type: diff_drive_controller/DiffDriveController
+      left_wheel_names: ["drivewhl_l_joint"]
+      right_wheel_names: ["drivewhl_r_joint"]
+      wheel_separation: 0.4
+      wheel_radius: 0.1
+      wheel_separation_multiplier: 1.0
+      left_wheel_radius_multiplier: 1.0
+      right_wheel_radius_multiplier: 1.0
+      publish_rate: 50.0
+      odom_frame_id: odom
+      base_frame_id: base_link
+      pose_covariance_diagonal : [0.001, 0.001, 0.0, 0.0, 0.0, 0.01]
+      twist_covariance_diagonal: [0.001, 0.0, 0.0, 0.0, 0.0, 0.01]
+      open_loop: true
+      enable_odom_tf: true
+      cmd_vel_timeout: 0.5
+      use_stamped_vel: false
+      linear:
+        x:
+          has_velocity_limits: true
+          has_acceleration_limits: true
+          has_jerk_limits: false
+          max_velocity: 1.0
+          min_velocity: -1.0
+          max_acceleration: 1.0
+          min_acceleration: -1.0
+          max_jerk: 0.0
+          min_jerk: 0.0
+      angular:
+        z:
+          has_velocity_limits: true
+          has_acceleration_limits: true
+          has_jerk_limits: false
+          max_velocity: 1.0
+          min_velocity: -1.0
+          max_acceleration: 1.0
+          min_acceleration: -1.0
+          max_jerk: 0.0
+          min_jerk: 0.0

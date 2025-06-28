@@ -1,4 +1,6 @@
 from setuptools import find_packages, setup
+from glob import glob
+import os
 
 package_name = 'yolo_inference_node'
 
@@ -10,6 +12,9 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+
+        # ✅ This line installs all .launch.py files in your launch/ folder
+        (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')),
     ],
     install_requires=[
         'setuptools',
@@ -25,7 +30,6 @@ setup(
     entry_points={
         'console_scripts': [
             'yolo_inference_node = yolo_inference_node.yolo_inference_node:main',
-            'room_type_detector = room_type_detector.room_type_detector:main',
         ],
     },
 )

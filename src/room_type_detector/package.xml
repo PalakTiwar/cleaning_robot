@@ -9,6 +9,8 @@
   <!-- Runtime dependencies -->
   <exec_depend>rclpy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
 
   <!-- Build tool -->
   <buildtool_depend>ament_python</buildtool_depend>

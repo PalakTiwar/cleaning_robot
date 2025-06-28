@@ -41,6 +41,31 @@ def generate_launch_description():
 
     run_headless = LaunchConfiguration("run_headless")
     world_file = LaunchConfiguration("world_file")
+    use_sim_time = LaunchConfiguration("use_sim_time")
+    
+    '''flask_bridge_node = Node(
+        package="flask_bridge_node", # <--- IMPORTANT: Replace with your actual Flask ROS 2 package name
+        executable="flask_bridge_node", # Assuming your Flask app is named app.py and setup as an executable
+        name="flask_bridge_node",
+        output="screen",
+        parameters=[{'use_sim_time': True}] # Pass use_sim_time if your Flask app uses rclpy
+    )
+    
+    room_navigation_node = Node(
+        package="room_navigation_node",
+        executable="room_navigation_node",
+        name="room_navigation_node",
+        output="screen",
+        parameters=[{'use_sim_time': True}] # Pass use_sim_time
+    )
+    
+    cleaning_controller_node = Node(
+        package="cleaning_controller_node", # <--- IMPORTANT: Replace with the actual package of this node if different
+        executable="cleaning_controller_node",
+        name="cleaning_controller_node",
+        output="screen",
+        parameters=[{'use_sim_time': True}] # Pass use_sim_time
+    )'''
 
     # Including launchfiles with execute process because i didn't find another way to wait for a certain messages befor starting the next launchfile
     bringup = ExecuteProcess(
@@ -55,7 +80,7 @@ def generate_launch_description():
                     "display.launch.py",
                 ]
             ),
-            "use_rviz:=false",
+            "use_rviz:=true",
             ["run_headless:=", run_headless],
             "use_localization:=false",
             ["world_file:=", world_file]
@@ -146,6 +171,9 @@ def generate_launch_description():
                 navigation_ready_message,
                 [
                     LogInfo(msg="Ready for navigation!"),
+                    #room_navigation_node,
+                    #cleaning_controller_node,
+                    #flask_bridge_node,
                 ],
             ),
         )
